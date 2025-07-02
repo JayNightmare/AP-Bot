@@ -18,6 +18,8 @@ jobs:
                   key: ${{ secrets.LINODE_SSH_KEY }}
                   username: ${{ secrets.LINODE_USER }}
                   script: |
+                      cd ${{ secrets.DEPLOY_PATH }}
+                      
                       # Check if project directory exists
                       if [ -d "${{ secrets.PROJECT_PATH }}" ]; then
                           echo "📦 Existing deployment found - performing update..."
@@ -28,10 +30,14 @@ jobs:
                           git reset --hard origin/${{ secrets.BRANCH_NAME }}
                           npm ci --production
                           
-                          # Restart PM2 process
-                          pm2 restart "${{ secrets.PM2_PROCESS_NAME }}" || pm2 start index.js --name "${{ secrets.PM2_PROCESS_NAME }}"
-                          
-                          echo "✅ Update completed successfully"
+                          # Check if .env file exists
+                          if [ -f ".env" ]; then
+                              # Restart PM2 process
+                              pm2 restart "${{ secrets.PM2_PROCESS_NAME }}" || pm2 start index.js --name "${{ secrets.PM2_PROCESS_NAME }}"
+                              echo "✅ Update completed successfully"
+                          else
+                              echo "⚠️ .env file is missing. Skipping PM2 start/restart."
+                          fi
                       else
                           echo "🚀 No existing deployment found - performing initial deployment..."
                           
@@ -46,11 +52,15 @@ jobs:
                           # Install dependencies
                           npm ci --production
                           
-                          # Start PM2 process
-                          pm2 start index.js --name ${{ secrets.PM2_PROCESS_NAME }}
-                          pm2 save
-                          
-                          echo "✅ Initial deployment completed successfully"
+                          # Check if .env file exists
+                          if [ -f ".env" ]; then
+                              # Start PM2 process
+                              pm2 start index.js --name "${{ secrets.PM2_PROCESS_NAME }}"
+                              pm2 save
+                              echo "✅ Initial deployment completed successfully"
+                          else
+                              echo "⚠️ .env file is missing. Skipping PM2 start."
+                          fi
                       fi
 
                       # Show PM2 status
