@@ -1,0 +1,24 @@
+{
+    "name": "ap-discord-bot",
+    "version": "1.0.0",
+    "description": "Discord bot for role assignment to new users",
+    "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "validate": "node validate-setup.js",
+    "test": "node test-structure.js"
+  },
+    "keywords": [
+        "discord",
+        "bot",
+        "roles",
+        "slash-commands"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "discord.js": "^14.14.1",
+        "dotenv": "^16.3.1"
+    }
+}
