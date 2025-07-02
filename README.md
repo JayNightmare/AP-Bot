@@ -126,7 +126,6 @@ AP Bot/
 ├── .env                      # Your bot configuration (not in git)
 ├── .gitignore               # Git ignore file
 ├── join-roles.json          # Persistent storage for role configurations
-├── start.bat                # Windows startup script
 ├── validate-setup.js        # Setup validation script
 └── README.md                # This file
 ```

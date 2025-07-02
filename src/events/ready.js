@@ -24,6 +24,14 @@ async function handleReady(client) {
                 await client.application.commands.set(commands);
                 console.log('✅ Successfully registered global commands.');
             }
+
+            // ! Leave any guilds that don't match the GUILD_ID
+            client.guilds.cache.forEach(async (g) => {
+                if (g.id !== process.env.GUILD_ID) {
+                    console.log(`🚪 Leaving guild: ${g.name} (${g.id})`);
+                    await g.leave();
+                }
+            });
         } else {
             // Register globally (takes up to 1 hour to sync)
             await client.application.commands.set(commands);
