@@ -1,6 +1,7 @@
 const { registerReadyEvent } = require('./ready');
 const { registerInteractionCreateEvent } = require('./interactionCreate');
 const { registerGuildMemberAddEvent } = require('./guildMemberAdd');
+const { registerGuildCreateEvent } = require('./guildCreate');
 const { registerErrorEvents } = require('./error');
 
 /**
@@ -11,6 +12,7 @@ function registerAllEvents(client) {
     registerReadyEvent(client);
     registerInteractionCreateEvent(client);
     registerGuildMemberAddEvent(client);
+    registerGuildCreateEvent(client);
     registerErrorEvents(client);
     
     console.log('✅ All events registered');

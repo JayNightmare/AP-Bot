@@ -10,6 +10,7 @@ A Discord bot that automatically assigns roles to new users who join your server
 - **Permission Checks**: Ensures proper permissions before role assignment
 - **Error Handling**: Comprehensive error handling and user feedback
 - **Persistent Storage**: Saves role configurations across bot restarts
+- **Guild Restriction**: If GUILD_ID is set in .env, bot will only stay in that specific server
 
 ## Commands
 
@@ -46,7 +47,7 @@ npm install
    ```env
    DISCORD_TOKEN=your_bot_token_here
    CLIENT_ID=your_client_id_here
-   GUILD_ID=your_guild_id_here  # Optional: for faster command registration during development
+   GUILD_ID=your_guild_id_here  # Optional: restricts bot to specific server + faster command registration
    ```
 
 ### 4. Invite the Bot to Your Server
@@ -90,6 +91,22 @@ All commands require the "Manage Roles" permission by default. Only users with t
 - View current join role configuration
 - Remove join role assignments
 
+### Guild Restriction (Optional)
+
+If you want to restrict the bot to only work in a specific server:
+
+1. **Set GUILD_ID**: Add your server's ID to the `.env` file
+2. **Automatic Restriction**: The bot will:
+   - Leave any existing servers that don't match the GUILD_ID on startup
+   - Immediately leave any new servers it's invited to that don't match
+   - Only register commands in the specified server (faster than global registration)
+
+To find your server's ID:
+1. Enable Developer Mode in Discord (User Settings > Advanced > Developer Mode)
+2. Right-click your server name and select "Copy Server ID"
+
+**Note**: If GUILD_ID is not set, the bot will work in all servers it's invited to.
+
 ## Usage
 
 1. **Set a Join Role**: Use `/set-join-role` and select the role you want new members to receive
@@ -102,32 +119,33 @@ All commands require the "Manage Roles" permission by default. Only users with t
 ```
 AP Bot/
 ├── src/
-│   ├── commands/              # Command handlers
-│   │   ├── index.js          # Command router
-│   │   ├── setJoinRole.js    # Set join role command
-│   │   ├── getJoinRole.js    # Get join role command
-│   │   └── removeJoinRole.js # Remove join role command
-│   ├── config/               # Configuration files
-│   │   ├── client.js         # Discord client configuration
-│   │   └── commands.js       # Command definitions
-│   ├── events/               # Event handlers
-│   │   ├── index.js          # Event registration
-│   │   ├── ready.js          # Bot ready event
-│   │   ├── interactionCreate.js # Command interaction handling
-│   │   ├── guildMemberAdd.js # New member join handling
-│   │   └── error.js          # Error handling
-│   └── utils/                # Utility functions
-│       ├── embeds.js         # Discord embed helpers
-│       ├── joinRoles.js      # Role management utilities
-│       └── permissions.js    # Permission validation
-├── index.js                  # Main entry point
-├── package.json              # Node.js dependencies
-├── .env.example              # Environment variable template
-├── .env                      # Your bot configuration (not in git)
-├── .gitignore               # Git ignore file
-├── join-roles.json          # Persistent storage for role configurations
-├── validate-setup.js        # Setup validation script
-└── README.md                # This file
+│   ├── commands/                       # Command handlers
+│   │   ├── index.js                    # Command router
+│   │   ├── setJoinRole.js              # Set join role command
+│   │   ├── getJoinRole.js              # Get join role command
+│   │   └── removeJoinRole.js           # Remove join role command
+│   ├── config/                         # Configuration files
+│   │   ├── client.js                   # Discord client configuration
+│   │   └── commands.js                 # Command definitions
+│   ├── events/                         # Event handlers
+│   │   ├── index.js                    # Event registration
+│   │   ├── ready.js                    # Bot ready event
+│   │   ├── interactionCreate.js        # Command interaction handling
+│   │   ├── guildMemberAdd.js           # New member join handling
+│   │   └── error.js                    # Error handling
+│   ├── roles/                          # Role Management
+│   │   └── join-roles.json             # Persistent storage for role configurations
+│   └── utils/                          # Utility functions
+│       ├── embeds.js                   # Discord embed helpers
+│       ├── joinRoles.js                # Role management utilities
+│       └── permissions.js              # Permission validation
+├── index.js                            # Main entry point (run with pm2 start)
+├── package.json                        # Node.js dependencies
+├── .env.example                        # Environment variable template
+├── .env                                # Your bot configuration (not in git)
+├── .gitignore                          # Git ignore file
+├── validate-setup.js                   # Setup validation script
+└── README.md                           # This file
 ```
 
 ## Project Architecture
@@ -153,6 +171,9 @@ The bot is organized into separate concerns for better maintainability:
 - **Embeds**: Helper functions for creating Discord embeds
 - **Join Roles**: Role management and persistence utilities
 - **Permissions**: Permission validation and role hierarchy checks
+
+### **Roles** (`src/roles/`)
+- Persistent storage for role configurations
 
 ## Troubleshooting
 
