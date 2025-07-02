@@ -18,6 +18,8 @@ jobs:
                   key: ${{ secrets.LINODE_SSH_KEY }}
                   username: ${{ secrets.LINODE_USER }}
                   script: |
+                      cd ${{ secrets.DEPLOY_PATH }}
+                      
                       # Check if project directory exists
                       if [ -d "${{ secrets.PROJECT_PATH }}" ]; then
                           echo "📦 Existing deployment found - performing update..."
