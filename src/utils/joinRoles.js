@@ -20,6 +20,8 @@ function loadJoinRoles() {
         } catch (error) {
             console.error('❌ Error loading join roles:', error);
         }
+    } else {
+        console.log('ℹ️ No join roles configuration file found, starting with empty configuration');
     }
 }
 
@@ -28,6 +30,10 @@ function loadJoinRoles() {
  */
 function saveJoinRoles() {
     try {
+        if (!fs.existsSync(path.dirname(joinRolesFile))) {
+            fs.mkdirSync(path.dirname(joinRolesFile), { recursive: true });
+            console.log('ℹ️ Created roles directory for join roles configuration');
+        }
         const data = Object.fromEntries(joinRoles);
         fs.writeFileSync(joinRolesFile, JSON.stringify(data, null, 2));
         console.log('✅ Saved join roles configuration');
