@@ -3,7 +3,7 @@ const path = require('path');
 
 // Store join role configuration in memory
 const joinRoles = new Map();
-const joinRolesFile = path.join(__dirname, '../../join-roles.json');
+const joinRolesFile = path.join(__dirname, '../roles/join-roles.json');
 
 /**
  * Load join roles configuration from file
